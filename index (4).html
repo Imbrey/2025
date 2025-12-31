@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>微生活积分中心2025年度报告</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+        
+        /* 翻页容器 */
+        .swiper {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* 单页样式 */
+        .page {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,248,255,0.98) 100%);
+            border-radius: 20px;
+            margin: 15px;
+            padding: 30px 25px;
+            color: #333;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* 适配全面屏 */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            .page {
+                margin: max(15px, env(safe-area-inset-top)) max(15px, env(safe-area-inset-right)) 
+                       max(15px, env(safe-area-inset-bottom)) max(15px, env(safe-area-inset-left));
+            }
+        }
+        
+        /* 背景装饰元素 */
+        .page::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+        }
+        
+        /* 页眉 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        
+        .page-subtitle {
+            color: #666;
+            font-size: 0.95rem;
+            max-width: 80%;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        /* 内容区域 */
+        .page-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        /* 大数字样式 */
+        .big-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 20px 0;
+            text-shadow: 0 5px 15px rgba(106, 17, 203, 0.2);
+        }
+        
+        /* 图片容器 */
+        .image-container {
+            width: 100%;
+            margin: 20px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .responsive-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* 双图布局 */
+        .image-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .image-grid-item {
+            border-radius: 12px;
+            overflow: hidden;
+            height: 150px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .image-grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* 文章链接 */
+        .article-link {
+            display: block;
+            padding: 14px;
+            margin: 10px 0;
+            background: linear-gradient(90deg, rgba(106, 17, 203, 0.1), rgba(37, 117, 252, 0.1));
+            border-radius: 12px;
+            color: #2575fc;
+            text-decoration: none;
+            font-weight: 500;
+            border-left: 4px solid #6a11cb;
+            transition: transform 0.3s;
+            text-align: left;
+        }
+        
+        .article-link:hover {
+            transform: translateX(8px);
+            background: linear-gradient(90deg, rgba(106, 17, 203, 0.15), rgba(37, 117, 252, 0.15));
+        }
+        
+        /* 进度指示器 */
+        .pagination {
+            position: absolute;
+            bottom: 25px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 100;
+        }
+        
+        .pagination-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(106, 17, 203, 0.3);
+            margin: 0 6px;
+            transition: all 0.3s;
+        }
+        
+        .pagination-dot.active {
+            width: 24px;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            border-radius: 10px;
+        }
+        
+        /* 导航箭头 */
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: #6a11cb !important;
+            background: rgba(255, 255, 255, 0.9);
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .swiper-button-next::after,
+        .swiper-button-prev::after {
+            font-size: 1.2rem !important;
+            font-weight: 800;
+        }
+        
+        /* 页脚 */
+        .page-footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #888;
+            font-size: 0.85rem;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 适配不同手机机型 */
+        @media (max-width: 375px) { /* iPhone SE等小屏 */
+            .page {
+                padding: 20px 18px;
+                margin: 12px;
+            }
+            .page-title {
+                font-size: 1.5rem;
+            }
+            .big-number {
+                font-size: 2.8rem;
+            }
+        }
+        
+        @media (min-width: 414px) and (max-height: 896px) { /* 主流全面屏 */
+            .page {
+                padding: 35px 30px;
+            }
+        }
+        
+        /* 横屏适配 */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .page {
+                flex-direction: row;
+                align-items: center;
+                padding: 20px;
+            }
+            .page-header {
+                flex: 1;
+                margin-bottom: 0;
+                margin-right: 25px;
+            }
+            .page-content {
+                flex: 2;
+            }
+        }
+        
+        /* 加载动画 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #6a11cb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p style="color: #fff; margin-top: 15px;">加载年度报告中...</p>
+    </div>
+    
+    <!-- 翻页容器 -->
+    <div class="swiper">
+        <div class="swiper-wrapper">
+            
+            <!-- 第1页：封面 -->
+            <div class="swiper-slide">
+                <div class="page">
+                    <div class="page-header">
+                        <h1 class="page-title">微生活积分中心</h1>
+                        <p class="page-subtitle">2025年度报告</p>
+                    </div>
+                    <div class="page-content">
+                        <p style="color: #666; margin-bottom: 20px; font-size: 1.1rem;">
+                            致每一位湖大人，这是我们共同书写的2025
+                        </p>
+                        <div class="image-container">
+                            <!-- 已替换为您的封面图 -->
+                            <img src="https://raw.githubusercontent.com/Imbrey/image/5a01a67ce0f03aab85c764444994e90dfb5c7154/sport.png" 
+                                 alt="年度报告封面" class="responsive-img">
+                        </div>
+                        <p style="margin-top: 25px; color: #888; font-style: italic;">
+                            麓山的蝉鸣藏着盛夏，岳麓的霜叶染了金秋<br>
+                            此刻与你温柔相见～
+                        </p>
+                        <div style="margin-top: 30px;">
+                            <p style="color: #2575fc; font-size: 0.9rem;">↓ 滑动翻阅你的2025 ↓</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 第2页：新朋友 -->
+            <div class="swiper-slide">
+                <div class="page">
+                    <div class="page-header">
+                        <h2 class="page-title">新朋友，新开始</h2>
+                        <p class="page-subtitle">回顾2025，微微又迎来了一群新朋友</p>
+                    </div>
+                    <div class="page-content">
+                        <div class="big-number">8,892</div>
+                        <p style="font-size: 1.2rem; margin-bottom: 15px;">位新同学注册了湖大微生活</p>
+                        <p style="color: #666;">微微很高兴遇到你们～</p>
+                        <div class="image-container" style="margin-top: 25px;">
+                            <!-- 替换为新同学相关图片 -->
+                            <img src="https://via.placeholder.com/300x180/2575fc/ffffff?text=Welcome+New+HNUer" 
+                                 alt="新同学注册" class="responsive-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 第3页：成长足迹 -->
+            <div class="swiper-slide">
+                <div class="page">
+                    <div class="page-header">
+                        <h2 class="page-title">成长足迹</h2>
+                        <p class="page-subtitle">湖大微生活成立至今</p>
+                    </div>
+                    <div class="page-content">
+                        <div class="big-number">79,652</div>
+                        <p style="margin-bottom: 20px;">位 HNUer 的线上聚集地</p>
+                        
+                        <div style="display: flex; justify-content: space-around; width: 100%; margin: 25px 0;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; color: #6a11cb; font-weight: 700;">23,974</div>
+                                <div style="font-size: 0.9rem; color: #666;">解锁积分功能</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; color: #2575fc; font-weight: 700;">304万+</div>
+                                <div style="font-size: 0.9rem; color: #666;">积分累计发放</div>
+                            </div>
+                        </div>
+                        
+                        <p style="font-style: italic; color: #888; margin-top: 20px;">
+                            每一分都是我们之间的珍贵羁绊。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 第4页：签到数据 -->
+            <div class="swiper-slide">
+                <div class="page">
+                    <div class="page-header">
+                        <h2 class="page-title">陪伴与坚持</h2>
+                        <p class="page-subtitle">2025签到记录</p>
+                    </div>
+                    <div class="page-content">
+                        <div class="big-number">35万+</div>
+                        <p style="margin-bottom: 25px;">次签到，让平淡的日子有了仪式感</p>
+                        
+                        <div style="background: #f8f9ff; border-radius: 15px; padding: 20px; margin: 0 10px;">
+                            <p style="color: #6a11cb; font-weight: 600; margin-bottom: 15px;">
+                                📍 签到高峰月：<span style="color: #ff416c;">11月</span>
+                            </p>
+                            <div style="font-size: 2.5rem; color: #ff416c; font-weight: 800; margin: 10px 0;">
+                                70,748
+                            </div>
+                            <p style="color: #666; font-size: 0.9rem;">次打卡记录</p>
+                        </div>
+                        
+                        <div class="image-container" style="margin-top: 25px;">
+                            <!-- 替换为签到相关图片 -->
+                            <img src="https://via.placeholder.com/300x150/ff416c/ffffff?text=Daily+Check-in" 
+                                 alt="签到打卡" class="responsive-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 第5页：热门文章 -->
+            <div class="swiper-slide">
+                <div class="page">
+                    <div class="page-header">
+                        <h2 class="page-title">知湖·年度热文</h2>
+                        <p class="page-subtitle">6万+ 次阅读，藏着独属于湖大的小确幸</p>
+                    </div>
+                    <div class="page-content" style="justify-content: flex-start;">
+                        <p style="margin-bottom: 20px; color: #666; text-align: center;">
+                            今年读过的推文，还记得哪一篇最戳你吗？
+                        </p>
+                        
+                        <div style="overflow-y: auto; max-height: 280px; padding-right: 5px;">
+                            <a href="https://mp.weixin.qq.com/s/l00fc0LJA05vHBbjmIJIXA" 
+                               class="article-link" target="_blank">
+                                《积分基础，奖品就不基础》
+                            </a>
+                            <a href="https://mp.weixin.qq.com/s/C7tCAoo0tbIux8aBL5gRw" 
+                               class="article-link" target="_blank">
+                                《爱你老己，老自送你演出门票》
+                            </a>
+                            <a href="https://mp.weixin.qq.com/s/q7PXMOAQy0x3hoIVnVzS9A" 
+                               class="article-link" target="_blank">
+                                《萌新指南 | 听说了吗？湖大人都在用......》
+                            </a>
+                            <a href="https://mp.weixin.qq.com/s/s7Ot2QUw23R26mC0jitS4Q" 
+                               class="article-link" target="_blank">
+                                《问东问西，不如问问我这个小东西》
+                            </a>
+                            <a href="https://mp.weixin.qq.com/s/DwAK9PCtDEGIlSoEkKOPBQ" 
+                               class="article-link" target="_blank">
+                                《毕业前，开麦》
+                            </a>
+                        </div>
+                        
+                        <div class="image-container" style="margin-top: 20px;">
+                            <!-- 替换为文章相关图片 -->
+                            <img src="https://via.placeholder.com/300x120/6a11cb/ffffff?text=Popular+Articles" 
+                                 alt="热门文章" class="responsive-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 第6页：福利与周边 -->
+            <div class="swiper-slide">
+                <div class="page">
+                    <div class="page-header">
+                        <h2 class="page-title">福利时刻</h2>
+                        <p class="page-subtitle">2025，微微继续为大家送上福利</p>
+                    </div>
+                    <div class="page-content">
+                        <p style="margin-bottom: 20px;">
+                            <span style="background: linear-gradient(90deg, #ff416c, #ff4b2b); 
+                                         padding: 5px 12px; border-radius: 20px; color: white; font-weight: 600;">
+                                惊喜盲盒
+                            </span>
+                            以超高人气稳居兑换榜首！
+                        </p>
+                        
+                        <div class="image-grid">
+                            <div class="image-grid-item">
+                                <!-- 已替换为盲盒图片 -->
+                                <img src="https://raw.githubusercontent.com/Imbrey/image/7b70fabeb29503d81c886ab321af12f7e5c145ce/1744736224062-10%20(1).jpg" 
+                                     alt="惊喜盲盒">
+                            </div>
+                            <div class="image-grid-item">
+                                <!-- 已替换为行李箱图片 -->
+                                <img src="https://raw.githubusercontent.com/Imbrey/image/7b70fabeb29503d81c886ab321af12f7e5c145ce/%E8%A1%8C%E6%9D%8E%E7%AE%B1.jpg" 
+                                     alt="毕业行李箱">
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px; background: #f8f9ff; border-radius: 12px; padding: 15px;">
+                            <p style="color: #666; margin-bottom: 10px;">今年送出的福利还包括：</p>
+                            <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                                <div style="text-align: center; margin: 5px 10px;">
+                                    <div style="font-weight: 700; color: #6a11cb;">21位</div>
+                                    <div style="font-size: 0.8rem; color: #666;">毕业生行李箱</div>
+                                </div>
+                                <div style="text-align: center; margin: 5px 10px;">
+                                    <div style="font-weight: 700; color: #2575fc;">30张</div>
+                                    <div style="font-size: 0.8rem; color: #666;">音乐节门票</div>
+                                </div>
+                                <div style="text-align: center; margin: 5px 10px;">
+                                    <div style="font-weight: 700; color: #ff416c;">60张</div>
+                                    <div style="font-size: 0.8rem; color: #666;">演出季门票</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 第7页：积分排行榜 -->
+            <div class="swiper-slide">
+                <div class="page">
+                    <div class="page-header">
+                        <h2 class="page-title">积分荣耀榜</h2>
+                        <p class="page-subtitle">今年积分中心出了几个大人物</p>
+                    </div>
+                    <div class="page-content">
+                        <div style="background: linear-gradient(135deg, #6a11cb, #2575fc); 
+                                     border-radius: 20px; padding: 25px; color: white; margin-bottom: 25px;">
+                            <div style="font-size: 0.9rem; opacity: 0.9;">积分首富</div>
+                            <div style="font-size: 3.5rem; font-weight: 800; margin: 10px 0;">6,158</div>
+                            <div style="font-size: 1rem;">分</div>
+                        </div>
+                        
+                        <p style="margin-bottom: 20px; color: #666;">
+                            前10名HNUer的积分均超过
+                            <span style="font-weight: 700; color: #2575fc;">2,900分</span>，太会攒啦！
+                        </p>
+                        
+                        <p style="font-style: italic; color: #888;">
+                            每一分积攒都变成了实实在在的快乐～
+                        </p>
+                        
+                        <div class="image-container" style="margin-top: 25px;">
+                            <!-- 替换为排行榜相关图片 -->
+                            <img src="https://via.placeholder.com/300x120/6a11cb/ffffff?text=Ranking+Chart" 
+                                 alt="积分排行榜" class="responsive-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 第8页：2026预告 -->
+            <div class="swiper-slide">
+                <div class="page">
+                    <div class="page-header">
+                        <h2 class="page-title">2026惊喜预告</h2>
+                        <p class="page-subtitle">积分玩法焕新升级</p>
+                    </div>
+                    <div class="page-content">
+                        <div style="background: rgba(106, 17, 203, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 25px;">
+                            <h3 style="color: #6a11cb; margin-bottom: 10px;">【主题留言板】</h3>
+                            <p style="color: #666; line-height: 1.6;">
+                                每月设定专属互动主题，参与留言即可解锁额外积分奖励，
+                                让每一份心声都被听见，每一次分享都有收获～
+                            </p>
+                        </div>
+                        
+                        <p style="margin-bottom: 15px; font-weight: 600; color: #333;">
+                            本月主题：<span style="color: #ff416c;">新年愿望墙</span>
+                        </p>
+                        
+                        <div class="image-container">
+                            <!-- 替换为留言板界面图 -->
+                            <img src="https://via.placeholder.com/300x150/2575fc/ffffff?text=Message+Board" 
+                                 alt="留言板界面" class="responsive-img">
+                        </div>
+                        
+                        <p style="margin-top: 20px; color: #666; font-style: italic;">
+                            旧岁的故事已落幕，新年的篇章待开启～
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 第9页：封底（原第10页，现调整为第9页） -->
+            <div class="swiper-slide">
+                <div class="page">
+                    <div class="page-header">
+                        <h2 class="page-title">感谢陪伴</h2>
+                        <p class="page-subtitle">2026，微生活与你不见不散</p>
+                    </div>
+                    <div class="page-content">
+                        <div style="max-width: 300px; margin: 0 auto;">
+                            <p style="color: #666; line-height: 1.8; margin-bottom: 25px; text-align: left;">
+                                2025年，有人坚持每日签到，用清晨的轻点开启元气一天；
+                                有人深耕学业之余，阅读文章、发表见解；
+                                有人用积分兑换实用好物，把麓山南路的青春足迹悄悄珍藏。
+                            </p>
+                            
+                            <p style="color: #333; font-weight: 600; margin-bottom: 30px;">
+                                感谢每一位湖大人的陪伴，让积分中心成为连接校园与生活的暖心纽带。
+                            </p>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <p style="font-size: 1.2rem; color: #6a11cb; font-weight: 700; margin-bottom: 10px;">
+                                2025，我们以积分为伴，定格温暖
+                            </p>
+                            <p style="font-size: 1.3rem; color: #2575fc; font-weight: 800;">
+                                2026，解锁更多精彩～
+                            </p>
+                        </div>
+                        
+                        <div class="page-footer">
+                            <p>数据统计时间：2025.1.1-2025.12.31</p>
+                            <p>出品：湖南大学微生活产品运营部</p>
+                            <p style="margin-top: 15px; color: #aaa; font-size: 0.8rem;">
+                                点击右上角分享给更多湖大人
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- 翻页箭头 -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        
+        <!-- 分页指示器 -->
+        <div class="pagination" id="pagination">
+            <!-- 动态生成 -->
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // 页面加载
+        document.addEventListener('DOMContentLoaded', function() {
+            // 隐藏加载动画
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                }, 500);
+            }, 1000);
+            
+            // 初始化翻页
+            initSwiper();
+        });
+        
+        // 初始化翻页效果
+        function initSwiper() {
+            const swiper = new Swiper('.swiper', {
+                direction: 'horizontal',
+                loop: false,
+                speed: 500,
+                spaceBetween: 0,
+                slidesPerView: 1,
+                centeredSlides: true,
+                
+                // 翻页箭头
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                
+                // 触摸参数
+                touchRatio: 1,
+                shortSwipes: true,
+                longSwipes: true,
+                threshold: 10,
+                
+                // 适配不同设备
+                breakpoints: {
+                    320: {
+                        spaceBetween: 0,
+                    },
+                    768: {
+                        spaceBetween: 0,
+                    }
+                },
+                
+                // 初始化后回调
+                on: {
+                    init: function() {
+                        updatePagination(this.activeIndex);
+                    },
+                    slideChange: function() {
+                        updatePagination(this.activeIndex);
+                    }
+                }
+            });
+            
+            // 生成分页指示器
+            function updatePagination(activeIndex) {
+                const pagination = document.getElementById('pagination');
+                const slides = document.querySelectorAll('.swiper-slide');
+                
+                pagination.innerHTML = '';
+                slides.forEach((_, index) => {
+                    const dot = document.createElement('div');
+                    dot.className = `pagination-dot ${index === activeIndex ? 'active' : ''}`;
+                    dot.addEventListener('click', () => {
+                        swiper.slideTo(index);
+                    });
+                    pagination.appendChild(dot);
+                });
+            }
+        }
+        
+        // 适配全面屏
+        function adjustForNotch() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const hasNotch = window.screen.height > window.innerHeight;
+            
+            if (isIOS && hasNotch) {
+                document.body.style.paddingTop = 'env(safe-area-inset-top)';
+                document.body.style.paddingBottom = 'env(safe-area-inset-bottom)';
+            }
+        }
+        
+        // 窗口调整时重新适配
+        window.addEventListener('resize', adjustForNotch);
+        adjustForNotch();
+        
+        // 微信分享配置（需后端支持）
+        function initWeChatShare() {
+            if (typeof wx !== 'undefined') {
+                // 这里需要后端提供签名
+                // wx.config({...});
+                // wx.ready(function() {...});
+            }
+        }
+    </script>
+</body>
+</html>
